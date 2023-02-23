@@ -10,5 +10,9 @@ terraform {
 }
 
 provider "aws" {
+  assume_role { 
+    role_arn = "arn:aws:iam::565934367826:role/Admin"
+  }
+
   region = "us-east-1"
 }

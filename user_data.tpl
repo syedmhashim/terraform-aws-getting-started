@@ -4,4 +4,4 @@ sudo yum install httpd -y
 sudo systemctl start httpd
 sudo systemctl enable httpd
 cd /var/www/html
-echo "Private EC2" > index.html
+echo "${type} instance" > index.html
