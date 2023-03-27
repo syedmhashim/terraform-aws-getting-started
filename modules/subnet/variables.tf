@@ -2,6 +2,8 @@ locals {
   prefix = "${var.prefix}-${var.type}"
   subnet_name = "${local.prefix}-subnet"
   route_table_name = "${local.prefix}-rt"
+  ngw_name = "${var.prefix}-ngw"
+  eip_name = "${var.prefix}-eip"
 }
 
 variable prefix {
@@ -40,9 +42,15 @@ variable igw_id {
   description = "internet gateway id"
 }
 
-variable public_subnet_id {
+variable ngw_id {
   type = string
   default = null
-  description = "id of public subnet in which nat gateway would be created"
+  description = "nat gateway id"
+}
+
+variable "create_ngw" {
+  type = bool
+  default = false
+  description = "if set to true a nat gateway is created within the subnet. 'type' must be set to 'public' for this to work"
 }
 

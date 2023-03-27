@@ -15,6 +15,7 @@ module "public_subnet" {
   availability_zone = local.subnet["public"]["availability_zone"]
   vpc_id = module.vpc.vpc_id
   igw_id = module.vpc.igw_id
+  create_ngw = true
 }
 
 module "private_subnet" {
@@ -24,7 +25,7 @@ module "private_subnet" {
   type = "private"
   availability_zone = local.subnet["private"]["availability_zone"]
   vpc_id = module.vpc.vpc_id
-  public_subnet_id = module.public_subnet.subnet_id
+  ngw_id = module.public_subnet.ngw_id
 }
 
 

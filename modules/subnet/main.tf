@@ -9,27 +9,32 @@ resource "aws_subnet" "this" {
 }
 
 resource "aws_eip" "this" {
-  count = var.type == "private" ? 1 : 0
+  count = var.type == "public" && var.create_ngw == true ? 1 : 0
   vpc = true
+  tags = {
+    Name = local.eip_name
+  }
 }
 
 resource "aws_nat_gateway" "this" {
-  count = var.type == "private" ? 1 : 0
+  count = var.type == "public" && var.create_ngw == true ? 1 : 0
   allocation_id = aws_eip.this[0].id
-  subnet_id     = var.public_subnet_id
+  subnet_id     = aws_subnet.this.id
+  tags = {
+    Name = local.ngw_name
+  }
 }
 
 resource "aws_route_table" "this" {
   vpc_id = var.vpc_id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = var.type == "public" && var.igw_id != null ? var.igw_id : null
-    nat_gateway_id = var.type == "private" ? aws_nat_gateway.this[0].id : null
+    gateway_id = var.type == "public" ? var.igw_id : null
+    nat_gateway_id = var.type == "private" ? var.ngw_id : null
   }
   tags = {
     Name = local.route_table_name
   }
-  depends_on = [aws_nat_gateway.this]
 }
 
 resource "aws_route_table_association" "this" {
